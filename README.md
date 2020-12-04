@@ -10,4 +10,9 @@ Helpful Resources & Tutorials:
 - More information on Video List API: https://stackoverflow.com/questions/15596753/how-do-i-get-video-durations-with-youtube-api-version-3
 - Creating a Maven project - https://www.youtube.com/watch?v=sNEcpw8LPpo
 
-- Potential UI: https://www.javatpoint.com/java-swing
+Java Swing UI:
+- https://www.javatpoint.com/java-swing
+- https://github.com/Chrriis/DJ-Native-Swing
+- http://djproject.sourceforge.net/ns
+- https://stackoverflow.com/questions/20440484/embed-a-youtube-video-to-jframe
+- https://www.youtube.com/watch?v=5o3fMLPY7qY
