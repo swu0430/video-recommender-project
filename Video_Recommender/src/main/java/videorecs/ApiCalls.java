@@ -27,14 +27,13 @@ public class ApiCalls {
 	 * @param pageToken - string used to move to next page of search results if needed
 	 * @param query - key words for the search
 	 * @param type - should be set to "video" for video searches
-	 * @param duration - length of video; can be set to "any"/"long"/"medium"/"short"
 	 * @return JSON for the YouTube "Search: list" API
 	 * @throws GeneralSecurityException
 	 * @throws IOException
 	 * @throws GoogleJsonResponseException
 	 */
 	public SearchListResponse videoSearches(YouTube youtubeService, String devKey, ArrayList<String> part, 
-		long maxResults, String pageToken, String query, ArrayList<String> type, String duration) 
+		long maxResults, String pageToken, String query, ArrayList<String> type) 
 		throws GeneralSecurityException, IOException, GoogleJsonResponseException {
 		
         // Define and execute the "Search: list" API request
@@ -45,7 +44,6 @@ public class ApiCalls {
             .setPageToken(pageToken)
         	.setQ(query)
         	.setType(type)
-        	.setVideoDuration(duration)
             .execute();
         
         // Return the "Search: list" API JSON
@@ -57,14 +55,14 @@ public class ApiCalls {
 	 * for a given YouTube video.
 	 * @param youtubeService - authorized YouTube API client service
 	 * @param devKey - developer key needed for YouTube API client service authorization
-	 * @param part - ArrayList of Strings; should be set to "content details" and "statistics"
+	 * @param part - ArrayList of Strings; should be set to "contentDetails" and "statistics"
 	 * @param id - unique videoId for the YouTube video 
 	 * @return JSON for the YouTube "Videos: list" API
 	 * @throws GeneralSecurityException
 	 * @throws IOException
 	 * @throws GoogleJsonResponseException
 	 */
-	public VideoListResponse videoDetails(YouTube youtubeService, String devKey, ArrayList<String> part, 
+	public VideoListResponse videoDetails(YouTube youtubeService, String devKey, ArrayList<String> part,  
 		ArrayList<String> id) throws GeneralSecurityException, IOException, GoogleJsonResponseException {
 	
 		// Define and execute the "Videos: list" API request
