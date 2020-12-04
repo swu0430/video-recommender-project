@@ -27,12 +27,6 @@ public class Control {
 
 	// STATIC VARIABLES
 	
-    /**
-     * Your personal Developer Key (can be set up and obtained from link below).
-     * https://console.developers.google.com/projectselector2/apis/credentials?supportedpurview=project&organizationId=0&authuser=1
-     */
-	private static final String DEVELOPER_KEY = "AIzaSyBQJenlwjXsLvrD8O11MPl5Hosa0mfL4eI";
-
 	/**
 	 * Required string for calling the YouTube "Search: list" API
 	 */
@@ -44,10 +38,15 @@ public class Control {
     private static final JsonFactory JSON_FACTORY = JacksonFactory.getDefaultInstance();
     
     /**
+     * Developer Key to be used for YouTube API client service authorization.
+     */
+	private static String DEVELOPER_KEY;
+
+    /**
      * Number of videos the program will recommend to the user.
      */
     private static final int NUMBER_VIDEOS = 5;
-
+	
     /**
      * Build and return an authorized API client service.
      * @return an authorized API client service
@@ -68,6 +67,10 @@ public class Control {
     public static void main(String[] args)
         throws GeneralSecurityException, IOException, GoogleJsonResponseException {
         
+    	// Load the developer key using the ignored Git class 'ApiDevKey'
+    	ApiDevKey apiDevKey = new ApiDevKey();
+    	DEVELOPER_KEY = apiDevKey.getDevKey();
+    	
     	// Open scanner
     	Scanner scanner = new Scanner(System.in);
     	
