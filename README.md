@@ -10,4 +10,4 @@ Helpful Resources & Tutorials:
 - More information on Video List API: https://stackoverflow.com/questions/15596753/how-do-i-get-video-durations-with-youtube-api-version-3
 - Creating a Maven project - https://www.youtube.com/watch?v=sNEcpw8LPpo
 
-- Brandon's recommendation for UI: https://www.javatpoint.com/java-swing
+- Potential UI: https://www.javatpoint.com/java-swing
