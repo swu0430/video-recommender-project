@@ -2,6 +2,14 @@ package videorecs;
 
 import java.util.Scanner;
 
+import javax.swing.JFrame;
+import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+
+import chrriis.dj.nativeswing.swtimpl.NativeInterface;
+import chrriis.dj.nativeswing.swtimpl.components.JWebBrowser;
+
+import java.awt.BorderLayout;
 import java.io.IOException;
 import java.security.GeneralSecurityException;
 import java.util.ArrayList;
@@ -40,7 +48,7 @@ public class Control {
     /**
      * Developer Key to be used for YouTube API client service authorization.
      */
-	private static String DEVELOPER_KEY;
+	private static final String DEVELOPER_KEY = ApiDevKey.DEV_KEY;
 
     /**
      * Number of videos the program will recommend to the user.
@@ -67,10 +75,6 @@ public class Control {
     public static void main(String[] args)
         throws GeneralSecurityException, IOException, GoogleJsonResponseException {
         
-    	// Load the developer key using the ignored Git class 'ApiDevKey'
-    	ApiDevKey apiDevKey = new ApiDevKey();
-    	DEVELOPER_KEY = apiDevKey.getDevKey();
-    	
     	// Open scanner
     	Scanner scanner = new Scanner(System.in);
     	
@@ -157,62 +161,62 @@ public class Control {
 	    	Recommendation[] recommendationList = new Recommendation[NUMBER_VIDEOS];
 	    	int counter_videos = 0;
 
-	    	while (counter_videos < NUMBER_VIDEOS) {
-
-		    	// Pick a random activity from the user's list. 
-				Random random = new Random();
-				int index = random.nextInt(activityArrayList.size());
-				String activity = activityArrayList.get(index);
-			
-		    	// Call the YouTube "Search: list" API to search for a set of videos based on criteria above
-		    	SearchListResponse videoSearchResults = apiCalls.videoSearches(youtubeService, DEVELOPER_KEY, 
-		    		partSearchList, maxResults, pageToken, activity, type);
-		    	// System.out.println(videoSearchResults); // ***FOR TESTING PURPOSES ONLY***
-		    	
-		    	// Set the next page token for another search, if required
-		    	pageToken = videoSearchResults.getNextPageToken();
-		    	
-		    	// Extract list of video search result items from the "Search: list" API JSON.
-		    	List<SearchResult> items = videoSearchResults.getItems();
-		    	
-		    	// Iterate over the items to store all the video ID's in an ArrayList.
-		    	ArrayList<String> videoIDs = new ArrayList<String>();
-		    	for (SearchResult sr : items) {
-		    		videoIDs.add(sr.getId().getVideoId());
-		    	}
-		    	
-		    	for (String s : videoIDs) {
-		    		System.out.print(videoIDs + " ");
-		    	}
-		    	
-		    	
-		    	// Iterate over the videoIDs ArrayList to get more details on each video using the "Videos: list" API.
-		    	//for (String videoID : videoIDs) {
-		    		
-		        // Set up and call the "Videos: list" API
-		        
-		    	// part --> set this ArrayList to include "contentDetails" and "statistics"
-		    	ArrayList<String> partVideosList = new ArrayList<String>();
-		    	partVideosList.add("contentDetails");
-		    	partVideosList.add("statistics");
-		        
-		        // Call the YouTube "Videos: list" API to filter video searches by further criteria and pick out
-		        // final recommendations for the user
-		        VideoListResponse videoDetails = apiCalls.videoDetails(youtubeService, DEVELOPER_KEY, partVideosList, videoIDs);
-		        System.out.println(videoDetails); //***FOR TESTING PURPOSES ONLY***
-		        
-		        //TODO
-		        
-		        // KEYWORDS: "how to", "tutorial", "demo", "tips", "beginner", "intermediate", "advanced", "learn",
-		        // "easy", "hard", "great for", "try", "education", "like a pro", "like a boss", "hack", etc.
-		        // Search for these in video (1) titles (2) categories (3) descriptions
-		        
-		        //If the video meets all the criteria, create a new recommended video and increase counter_videos.	
-		        //recommendationList[counter_videos] = new Recommendation(title, description, videoID);
-		        counter_videos++;
-		    	
-		    	
-	    	}
+//	    	while (counter_videos < NUMBER_VIDEOS) {
+//
+//		    	// Pick a random activity from the user's list. 
+//				Random random = new Random();
+//				int index = random.nextInt(activityArrayList.size());
+//				String activity = activityArrayList.get(index);
+//			
+//		    	// Call the YouTube "Search: list" API to search for a set of videos based on criteria above
+//		    	SearchListResponse videoSearchResults = apiCalls.videoSearches(youtubeService, DEVELOPER_KEY, 
+//		    		partSearchList, maxResults, pageToken, activity, type);
+//		    	// System.out.println(videoSearchResults); // ***FOR TESTING PURPOSES ONLY***
+//		    	
+//		    	// Set the next page token for another search, if required
+//		    	pageToken = videoSearchResults.getNextPageToken();
+//		    	
+//		    	// Extract list of video search result items from the "Search: list" API JSON.
+//		    	List<SearchResult> items = videoSearchResults.getItems();
+//		    	
+//		    	// Iterate over the items to store all the video ID's in an ArrayList.
+//		    	ArrayList<String> videoIDs = new ArrayList<String>();
+//		    	for (SearchResult sr : items) {
+//		    		videoIDs.add(sr.getId().getVideoId());
+//		    	}
+//		    	
+//		    	for (String s : videoIDs) {
+//		    		System.out.print(videoIDs + " ");
+//		    	}
+//		    	
+//		    	
+//		    	// Iterate over the videoIDs ArrayList to get more details on each video using the "Videos: list" API.
+//		    	//for (String videoID : videoIDs) {
+//		    		
+//		        // Set up and call the "Videos: list" API
+//		        
+//		    	// part --> set this ArrayList to include "contentDetails" and "statistics"
+//		    	ArrayList<String> partVideosList = new ArrayList<String>();
+//		    	partVideosList.add("contentDetails");
+//		    	partVideosList.add("statistics");
+//		        
+//		        // Call the YouTube "Videos: list" API to filter video searches by further criteria and pick out
+//		        // final recommendations for the user
+//		        VideoListResponse videoDetails = apiCalls.videoDetails(youtubeService, DEVELOPER_KEY, partVideosList, videoIDs);
+//		        System.out.println(videoDetails); //***FOR TESTING PURPOSES ONLY***
+//		        
+//		        //TODO
+//		        
+//		        // KEYWORDS: "how to", "tutorial", "demo", "tips", "beginner", "intermediate", "advanced", "learn",
+//		        // "easy", "hard", "great for", "try", "education", "like a pro", "like a boss", "hack", etc.
+//		        // Search for these in video (1) titles (2) categories (3) descriptions
+//		        
+//		        //If the video meets all the criteria, create a new recommended video and increase counter_videos.	
+//		        //recommendationList[counter_videos] = new Recommendation(title, description, videoID);
+//		        counter_videos++;
+//		    	
+//		    	
+//	    	}
 
 	    	// Ask for user feedback on each video. If the user likes a video, store it in the user's favorites.
 	    	ArrayList<Recommendation> favoritesList = new ArrayList<Recommendation>();
@@ -227,7 +231,7 @@ public class Control {
 		    
 	        while (keepAsking) {
 	        	
-			    System.out.print("I hoped you found those videos helpful! Want me to dig up some more for you? (y/n) ");
+			    System.out.print("I hope you found those videos helpful! Want me to dig up some more for you? (y/n) ");
 		        String prompt = scanner.nextLine();
 		        
 		        // If the user enters a response to begins with "y" or "Y," start a new search round.
@@ -253,9 +257,50 @@ public class Control {
 	    
 		}
 		
-	        
+		
+		//SWING TEST
+	    NativeInterface.open();
+	    SwingUtilities.invokeLater(new Runnable() {
+	    	public void run() {
+	    		JFrame frame = new JFrame("YouTube Viewer");
+	    		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    		frame.getContentPane().add(getBrowserPanel(), BorderLayout.CENTER);
+	    		frame.setSize(800, 600);
+	    		frame.setLocationByPlatform(true);
+	    		frame.setVisible(true);
+	    	}
+	    });
+	    
+	    NativeInterface.runEventPump();
+	    
+	    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+	    	@Override
+	    	public void run() {
+	    		NativeInterface.close(); //closing NativeInterface
+	    	}
+	    }));
+		
+
+		
         //Close the scanner.
         scanner.close();
 
     }
+    
+    
+    
+    /**
+     * This method return the panel with our video.
+     * @return
+     */
+    public static JPanel getBrowserPanel() {
+        JPanel webBrowserPanel = new JPanel(new BorderLayout());
+        JWebBrowser webBrowser = new JWebBrowser();
+        webBrowserPanel.add(webBrowser, BorderLayout.CENTER);
+        webBrowser.setBarsVisible(false);
+        webBrowser.navigate("https://www.youtube.com/watch?v=GKiHB5AzihE");
+        return webBrowserPanel;
+    }
+    
+    
 }
