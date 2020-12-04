@@ -40,7 +40,7 @@ public class Control {
     /**
      * Developer Key to be used for YouTube API client service authorization.
      */
-	private static String DEVELOPER_KEY;
+	private static final String DEVELOPER_KEY = ApiDevKey.DEV_KEY;
 
     /**
      * Number of videos the program will recommend to the user.
@@ -67,10 +67,6 @@ public class Control {
     public static void main(String[] args)
         throws GeneralSecurityException, IOException, GoogleJsonResponseException {
         
-    	// Load the developer key using the ignored Git class 'ApiDevKey'
-    	ApiDevKey apiDevKey = new ApiDevKey();
-    	DEVELOPER_KEY = apiDevKey.getDevKey();
-    	
     	// Open scanner
     	Scanner scanner = new Scanner(System.in);
     	
