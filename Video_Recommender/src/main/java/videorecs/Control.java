@@ -56,7 +56,7 @@ public class Control {
     /**
      * Number of videos the program will recommend to the user.
      */
-    private static final int NUMBER_VIDEOS = 5;
+    private static final int NUMBER_VIDEOS = 3;
     
     /**
      * Minimum approval rating required for a recommended video
@@ -94,15 +94,20 @@ public class Control {
      */
     private static boolean videoMeetsKeywordCriteria(String videoTitle, String  videoDescription) {
     	
-    	// KEYWORDS: "how to", "tutorial", "demo", "tips", "beginner", "intermediate", "advanced", "learn",
-        // "easy", "hard", "great for", "try", "education", "like a pro", "like a boss", "hack", etc.
-        String[] searchKeywords = {"how to", "tutorial", "demo", "tips", "beginner", "intermediate", 
-        		"advanced", "learn", "easy", "hard", "great for", "try", "education", 
+    	// KEYWORDS: "how to", "tutorial", "demo", "tips on", "beginner", "intermediate", "advanced", "learn",
+        // "easy", "hard", "great for", "education", "like a pro", "like a boss", "hack", etc.
+        String[] searchKeywords = {"how to", "tutorial", "demo", "tips on", "beginner", "intermediate", 
+        		"advanced", "learn", "easy", "hard", "great for", "education", 
         		"like a pro", "like a boss", "hack"};
         
         for (String keyword : searchKeywords) {
-        	if ((videoTitle.toLowerCase().contains(keyword)) || 
-        		(videoDescription.toLowerCase().contains(keyword))) {
+        	
+    		String regex = "\\b" + keyword + "\\b";
+        	Pattern p = Pattern.compile(regex);
+    		Matcher mVideoTitle = p.matcher(videoTitle);
+    		Matcher mVideoDescription = p.matcher(videoDescription);
+        	
+        	if (mVideoTitle.find() || mVideoDescription.find()) {
         		return true;
         	}
         }
@@ -181,14 +186,14 @@ public class Control {
     	String regex = "";
     	// Duration contains hours, minutes, and seconds information
     	if (duration.contains("H")) {
-    		regex = "PT([0-9]+)H([0-9]+)M([0-9]+)S";
+    		regex = "PT([0-9]+)H([0-9]*)M*([0-9]*)S*";
     		
     	// Duration contains minutes and seconds information
-    	} else if ((!duration.contains("H")) && (duration.contains("M"))) {
-    		regex = "PT([0-9]+)M([0-9]+)S";
+    	} else if (duration.contains("M")) {
+    		regex = "PT([0-9]+)M([0-9]*)S*";
     	
     	// Duration only contains seconds information
-    	} else if ((!duration.contains("H")) && (!duration.contains("M"))) {
+    	} else if (duration.contains("S")) {
     		regex = "PT([0-9]+)S";
     	}
     	
@@ -219,22 +224,21 @@ public class Control {
 		
 		while (m.find()) {
 			
-			// Get number of capturing groups
-			int groupCount = m.groupCount();
-			
-			// Duration includes hours, minutes, and seconds information
-			if (groupCount == 3) {
+			// Match the hours, minutes, and seconds with the groups in the regex matcher
+			if (duration.contains("H")) {
 				hours = m.group(1);
-				minutes = m.group(2);
-				seconds = m.group(3);
-				
-			// Duration includes minutes and seconds information only 
-			} else if (groupCount == 2) {
+				if (duration.contains("M")) {
+					minutes = m.group(2);
+					if (duration.contains("S")) {
+						seconds = m.group(3);
+					}
+				}
+			} else if (duration.contains("M")) {
 				minutes = m.group(1);
-				seconds = m.group(2); 
-				
-			// Duration includes seconds information only
-			} else if (groupCount == 1) {
+				if (duration.contains("S")) {
+					seconds = m.group(2);
+				}
+			} else if (duration.contains("S")) {
 				seconds = m.group(1);
 			}
 		}
@@ -254,6 +258,14 @@ public class Control {
 		} catch (Exception e) {
 			System.out.println("Invalid value cannot be parsed to an integer.");
 		}
+
+//		//***FOR TESTING PURPOSES ONLY***
+//		System.out.println("Duration: " + duration);
+//		System.out.println("H: " + hours);
+//		System.out.println("M: " + minutes);
+//		System.out.println("S: " + seconds);
+//		System.out.println("Total Seconds: " + totalSeconds);
+		
 		return totalSeconds;
     }
     
@@ -267,7 +279,7 @@ public class Control {
     	
     	// Check if video duration is < 5 minutes (under 300 seconds)
     	if ((durationCriteria == 'a') || (durationCriteria == 'A')) {
-    		if (videoDurationSeconds < 300) {
+    		if ((0 < videoDurationSeconds) && (videoDurationSeconds < 300)) {
     			return true;
     		} else {
     			return false;
@@ -409,7 +421,7 @@ public class Control {
 		    	SearchListResponse videoSearchResults = apiCalls.videoSearches(youtubeService, DEVELOPER_KEY, 
 		    		partSearchList, maxResults, pageToken, activity, type);
 		    	
-//		    	 System.out.println(videoSearchResults); // ***FOR TESTING PURPOSES ONLY***
+//		    	System.out.println(videoSearchResults); // ***FOR TESTING PURPOSES ONLY***
 		    	
 		    	// Set the next page token for another search, if required
 		    	pageToken = videoSearchResults.getNextPageToken();
@@ -422,10 +434,6 @@ public class Control {
 		    	for (SearchResult sr : items) {
 		    		videoIDs.add(sr.getId().getVideoId());
 		    	}
-		    	
-//		    	for (String s : videoIDs) {
-//		    		System.out.println(s); //***FOR TESTING PURPOSES ONLY***
-//		    	}
 		    	
 	    		// Set up the "Videos: list" API
 		        
@@ -451,7 +459,7 @@ public class Control {
 		        	// Create ArrayList to store single video ID to pass to the "Videos: list" API 
 		    		singleVideoID = new ArrayList<String>();
 		    		singleVideoID.add(videoID);
-			        
+		    		
 			        // Call the YouTube "Videos: list" API to filter video searches by further criteria and pick out
 			        // final recommendations for the user
 			        VideoListResponse videoDetails = apiCalls.videoDetails(youtubeService, DEVELOPER_KEY, 
@@ -519,106 +527,122 @@ public class Control {
     		// Ask for user feedback on each video. If the user likes a video, store it in the user's favorites. 
 	    		
     		// Iterate over videos in recommendationList
-	    	for (Recommendation recommendedVideo : recommendationList) {
-	    		
-	    		// Get relevant video information 
-	    		recommendedTitle = recommendedVideo.getTitle();
-	    		recommendedDescription = recommendedVideo.getDescription();
-	    		recommendedVideoID = recommendedVideo.getvideoID();
+	    	for (int i = 0; i < recommendationList.length; i++) {
 	    		
 	    		// Display video title and video URL 
 	    		System.out.println("Here's a video for you: ");
-	    		System.out.println(recommendedTitle);
-	    		System.out.println("https://www.youtube.com/watch?v="+ recommendedVideoID);
+	    		System.out.println(recommendationList[i].getTitle());
+	    		System.out.println("https://www.youtube.com/watch?v="+ recommendationList[i].getvideoID());
 	    		System.out.println();
 	    		
-	    		// Ask user if they liked the recommended video 
-	    		System.out.print("Did you like this video? (y/n) ");
-	    		String likedVideoPrompt = scanner.nextLine();
 	    		
-	    		try {
-		        	char likedVideoAnswer = likedVideoPrompt.charAt(0);
+	    		
+//	    		// Display the video in a pop-up window using Java Swing.
+//	    	    NativeInterface.open();
+//	    	    SwingUtilities.invokeLater(new Runnable() {
+//	    	    	public void run() {
+//	    	    		JFrame frame = new JFrame("YouTube Viewer");
+//	    	    		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+//	    	    		frame.getContentPane().add(getBrowserPanel(), BorderLayout.CENTER);
+//	    	    		frame.setSize(800, 600);
+//	    	    		frame.setLocationByPlatform(true);
+//	    	    		frame.setVisible(true);
+//	    	    	}
+//	    	    });
+//	    	    
+//	    	    NativeInterface.runEventPump();
+//	    	    
+//	    	    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+//	    	    	@Override
+//	    	    	public void run() {
+//	    	    		NativeInterface.close(); //closing NativeInterface
+//	    	    	}
+//	    	    }));
+	    		
+	    		
+	    		
+		        // Call the 'askYesOrNo' helper method to ask user whether he or she liked the recommended video.
+		    	String questionLikeOrDislike = "Did you like this video? (y/n) ";
+		        boolean like = askYesOrNo(questionLikeOrDislike, scanner);
+		        
+		        // If the user likes the video, add it to the favorites list.
+		        if (like) {
+		        	System.out.println("Great! I'll add it to your favorites list.");
+		        	System.out.println();
+
+		        	// Set like status to true
+		        	recommendationList[i].setLike(true);
 		        	
-		        		// Store video in the user's favorites if they liked the video 
-				        if ((likedVideoAnswer == 'y') || (likedVideoAnswer == 'Y')) {
-				        	System.out.println("Great! I'll add it to your favorites list.");
-				        	System.out.println();
-				        	
-				        	// Create a new recommendation from the liked video 
-				        	Recommendation favoritedVideo = new Recommendation(recommendedTitle, 
-				        			recommendedDescription, recommendedVideoID);
-				        	
-				        	// Set like status to true 
-				        	favoritedVideo.setLike(true);
-				        	
-				        	// Add video to user's favorite's list 
-				        	favoritesList.add(favoritedVideo);
-				        	
-				        } else if ((likedVideoAnswer == 'n') || (likedVideoAnswer == 'N')) {
-				        	System.out.println("Thanks for your feedback.");
-				        	System.out.println();
-				        }
-		        } catch (Exception e) {
-		        	System.out.println("Invalid response. Please try again.");
+		        	// Add video to user's favorite's list 
+		        	favoritesList.add(recommendationList[i]);
+		        	
+		        // If the user answers no, print a message and move on to displaying the next video.
+		        } else {
+		        	System.out.println("Thanks for your feedback.");
 		        	System.out.println();
 		        }
 	    	}
 	    	
-	        // Create a while loop to keep asking the user if he or she wants to keep searching for videos until a valid 
-		    // response is received.
-	        boolean keepAsking = true;
-		    
-	        while (keepAsking) {
-	        	
-			    System.out.print("I hope you found those videos helpful! Want me to dig up some more for you? (y/n) ");
-		        String prompt = scanner.nextLine();
-		        
-		        // If the user enters a response to begins with "y" or "Y," start a new search round.
-		        // If the user enters a response to begins with "n" or "N," exit the program.
-		        try {
-		        	char firstLetter = prompt.charAt(0);
-				        if ((firstLetter == 'y') || (firstLetter == 'Y')) {
-				        	programRunning = true;
-				        	keepAsking = false;
-				        } else if ((firstLetter == 'n') || (firstLetter == 'N')) {
-				        	System.out.println("Goodbye!");
-				        	programRunning = false;
-				        	keepAsking = false;
-				        }
-		        } catch (Exception e) {
-		        	System.out.println("Invalid response. Please try again.");
-		        	keepAsking = true;
-		        }
+	        // Call the 'askYesOrNo' helper method to ask user whether he or she wants to keep searching for videos.
+	    	String questionKeepSearching = "I hope you found those videos helpful! Want me to dig up some more for you? (y/n) ";
+	        boolean keepSearching = askYesOrNo(questionKeepSearching, scanner);
+	        
+	        // If the user answers yes, start a new round of video searches.
+	        if (keepSearching) {
+	        	programRunning = true;
+	        // If the user answers no, exit the program.
+	        } else {
+	        	System.out.println("Goodbye!");
+	        	programRunning = false;
 	        }
 	        System.out.println();
 		}
-		
-//		//SWING TEST
-//	    NativeInterface.open();
-//	    SwingUtilities.invokeLater(new Runnable() {
-//	    	public void run() {
-//	    		JFrame frame = new JFrame("YouTube Viewer");
-//	    		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//	    		frame.getContentPane().add(getBrowserPanel(), BorderLayout.CENTER);
-//	    		frame.setSize(800, 600);
-//	    		frame.setLocationByPlatform(true);
-//	    		frame.setVisible(true);
-//	    	}
-//	    });
-//	    
-//	    NativeInterface.runEventPump();
-//	    
-//	    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-//	    	@Override
-//	    	public void run() {
-//	    		NativeInterface.close(); //closing NativeInterface
-//	    	}
-//	    }));
 
         //Close the scanner.
         scanner.close();
     }
 
+    /**
+     * Helper method to ask the user for yes or no questions.
+     * This method will continuously prompt the user until a valid response is received.
+     * @param prompt - question for the user
+     * @param sc - Scanner object
+     * @return boolean reflecting whether the user answered yes (true) or no (false)
+     */
+	public static boolean askYesOrNo(String prompt, Scanner sc) {
+        
+		//Initialize boolean return value.
+		boolean response = true;
+		
+		// Create a while loop to keep asking the user until a valid response is received.
+        boolean keepAsking = true;
+		while (keepAsking) {
+        	
+		    System.out.print(prompt);
+	        String userInput = sc.nextLine();
+	        
+	        // If the user enters a response to begins with "y" or "Y", return true.
+	        // If the user enters a response to begins with "n" or "N," return false.
+	        try {
+	        	char firstLetter = userInput.charAt(0);
+			        if ((firstLetter == 'y') || (firstLetter == 'Y')) {
+			        	keepAsking = false;
+			        	response = true;
+			        } else if ((firstLetter == 'n') || (firstLetter == 'N')) {
+			        	keepAsking = false;
+			        	response = false;
+			        }
+	        } catch (Exception e) {
+	        	System.out.println("Invalid response. Please try again.");
+	        	keepAsking = true;
+	        }
+        }
+		
+		// Return the result from the user's input.
+		return response;
+	}
+    
+    
     /**
      * This method return the panel with our video.
      * @return
