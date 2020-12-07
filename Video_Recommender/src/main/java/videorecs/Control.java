@@ -361,7 +361,7 @@ public class Control {
 	    	
 	    	while (askForActivities) {
 		    	// search query --> ask user for a list of activities
-		    	System.out.print("Enter a list of activities you do regularly, separated by commas (e.g., \"cooking, dancing, golf,\"): ");
+		    	System.out.print("Enter a list of activities you do regularly, separated by commas (e.g., \"cooking, dancing, golf\"): ");
 		    	String query = scanner.nextLine();
 		    	
 		    	try {
@@ -535,32 +535,9 @@ public class Control {
 	    		System.out.println("https://www.youtube.com/watch?v="+ recommendationList[i].getvideoID());
 	    		System.out.println();
 	    		
-	    		
-	    		
-//	    		// Display the video in a pop-up window using Java Swing.
-//	    	    NativeInterface.open();
-//	    	    SwingUtilities.invokeLater(new Runnable() {
-//	    	    	public void run() {
-//	    	    		JFrame frame = new JFrame("YouTube Viewer");
-//	    	    		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-//	    	    		frame.getContentPane().add(getBrowserPanel(), BorderLayout.CENTER);
-//	    	    		frame.setSize(800, 600);
-//	    	    		frame.setLocationByPlatform(true);
-//	    	    		frame.setVisible(true);
-//	    	    	}
-//	    	    });
-//	    	    
-//	    	    NativeInterface.runEventPump();
-//	    	    
-//	    	    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-//	    	    	@Override
-//	    	    	public void run() {
-//	    	    		NativeInterface.close(); //closing NativeInterface
-//	    	    	}
-//	    	    }));
-	    		
-	    		
-	    		
+	    		// Display the video in a pop-up window using Java Swing.
+	    		//javaSwing(recommendationList[i].getvideoID()); //***Potential technical issues running on a Mac***
+
 		        // Call the 'askYesOrNo' helper method to ask user whether he or she liked the recommended video.
 		    	String questionLikeOrDislike = "Did you like this video? (y/n) ";
 		        boolean like = askYesOrNo(questionLikeOrDislike, scanner);
@@ -642,17 +619,43 @@ public class Control {
 		return response;
 	}
     
+	/**
+	 * This method creates the Java Swing embedded video pop up within Eclipse for each recommended video.
+	 * @param videoId - The unique id of the YouTube video.
+	 */
+	public static void javaSwing(final String videoId) {
+	    NativeInterface.open();
+	    SwingUtilities.invokeLater(new Runnable() {
+	    	public void run() {
+	    		JFrame frame = new JFrame("YouTube Viewer");
+	    		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+	    		frame.getContentPane().add(getBrowserPanel(videoId), BorderLayout.CENTER);
+	    		frame.setSize(800, 600);
+	    		frame.setLocationByPlatform(true);
+	    		frame.setVisible(true);
+	    	}
+	    });
+	    
+	    NativeInterface.runEventPump();
+	    
+	    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+	    	@Override
+	    	public void run() {
+	    		NativeInterface.close(); //closing NativeInterface
+	    	}
+	    }));
+	}
     
     /**
      * This method return the panel with our video.
      * @return
      */
-    public static JPanel getBrowserPanel() {
+    public static JPanel getBrowserPanel(String videoId) {
         JPanel webBrowserPanel = new JPanel(new BorderLayout());
         JWebBrowser webBrowser = new JWebBrowser();
         webBrowserPanel.add(webBrowser, BorderLayout.CENTER);
         webBrowser.setBarsVisible(false);
-        webBrowser.navigate("https://www.youtube.com/watch?v=GKiHB5AzihE");
+        webBrowser.navigate("https://www.youtube.com/watch?v=" + videoId);
         return webBrowserPanel;
     }
 }
