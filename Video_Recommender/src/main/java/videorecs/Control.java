@@ -328,6 +328,10 @@ public class Control {
     	// Create a new ApiCall object
     	ApiCalls apiCalls = new ApiCalls();
     	
+    	// Initialize ArrayList of recommended videos that the user has already seen so 
+    	// the user is not shown the same video more than once if they decide to keep searching
+    	ArrayList<String> seenVideoIDs = new ArrayList<String>();
+    	
 		// Create a while loop to keep the program running until the user wants to stop searching.
 		boolean programRunning = true;
 		while (programRunning) {
@@ -408,6 +412,7 @@ public class Control {
 	    	// Initialize an array of recommended videos. Set up a while loop to keep searching for YouTube videos
 	    	// until 5 videos that meet all the criteria are found.
 	    	Recommendation[] recommendationList = new Recommendation[NUMBER_VIDEOS];
+	    	
 	    	int counter_videos = 0;
 
 	    	while (counter_videos < NUMBER_VIDEOS) {
@@ -506,34 +511,38 @@ public class Control {
 			        if (durationCriteria && keywordCriteria && ratingCriteria &&
 			        	viewCountCriteria && likeCountCriteria) {
 			        	
-			        	// Only recommend up to NUMBER_VIDEOS to the user 
-			        	if (counter_videos < NUMBER_VIDEOS) {
+			        	// Only recommend up to NUMBER_VIDEOS to the user and 
+			        	// only add a video to the recommendations list if the user has not seen it before 
+			        	if ((counter_videos < NUMBER_VIDEOS) && (!seenVideoIDs.contains(videoID))) {
 			        		recommendationList[counter_videos] = new Recommendation(videoTitle, videoDescription, videoID);
+			        		counter_videos++;
 			        	} else if (counter_videos >= NUMBER_VIDEOS) {
 			        		// Stop searching for videos to recommend if you have > NUMBER_VIDEOS recommended videos
 			        		break;
 			        	}
-				        counter_videos++;
 			        }
 		    	} // end of inner for loop
 	    	} // end of outer while loop 
 
 	    	// Create ArrayList to store favorite user videos
 	    	ArrayList<Recommendation> favoritesList = new ArrayList<Recommendation>();
-    		String recommendedTitle;
-    		String recommendedDescription;
-    		String recommendedVideoID;
 	    	
     		// Ask for user feedback on each video. If the user likes a video, store it in the user's favorites. 
-	    		
+	    	
     		// Iterate over videos in recommendationList
 	    	for (int i = 0; i < recommendationList.length; i++) {
 	    		
+//	    		System.out.println("Seen video IDs: " + seenVideoIDs); //***FOR TESTING PURPOSES ONLY***
+//	    		System.out.println();
+
 	    		// Display video title and video URL 
 	    		System.out.println("Here's a video for you: ");
 	    		System.out.println(recommendationList[i].getTitle());
 	    		System.out.println("https://www.youtube.com/watch?v="+ recommendationList[i].getvideoID());
 	    		System.out.println();
+	    		
+	    		// Add video ID to seenVideoIDs ArrayList
+	    		seenVideoIDs.add(recommendationList[i].getvideoID());
 	    		
 	    		// Display the video in a pop-up window using Java Swing.
 	    		//javaSwing(recommendationList[i].getvideoID()); //***Potential technical issues running on a Mac***
@@ -558,6 +567,7 @@ public class Control {
 		        	System.out.println("Thanks for your feedback.");
 		        	System.out.println();
 		        }
+	    		
 	    	}
 	    	
 	        // Call the 'askYesOrNo' helper method to ask user whether he or she wants to keep searching for videos.
@@ -623,28 +633,28 @@ public class Control {
 	 * This method creates the Java Swing embedded video pop up within Eclipse for each recommended video.
 	 * @param videoId - The unique id of the YouTube video.
 	 */
-	public static void javaSwing(final String videoId) {
-	    NativeInterface.open();
-	    SwingUtilities.invokeLater(new Runnable() {
-	    	public void run() {
-	    		JFrame frame = new JFrame("YouTube Viewer");
-	    		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-	    		frame.getContentPane().add(getBrowserPanel(videoId), BorderLayout.CENTER);
-	    		frame.setSize(800, 600);
-	    		frame.setLocationByPlatform(true);
-	    		frame.setVisible(true);
-	    	}
-	    });
-	    
-	    NativeInterface.runEventPump();
-	    
-	    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
-	    	@Override
-	    	public void run() {
-	    		NativeInterface.close(); //closing NativeInterface
-	    	}
-	    }));
-	}
+//	public static void javaSwing(final String videoId) {
+//	    NativeInterface.open();
+//	    SwingUtilities.invokeLater(new Runnable() {
+//	    	public void run() {
+//	    		JFrame frame = new JFrame("YouTube Viewer");
+//	    		frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+//	    		frame.getContentPane().add(getBrowserPanel(videoId), BorderLayout.CENTER);
+//	    		frame.setSize(800, 600);
+//	    		frame.setLocationByPlatform(true);
+//	    		frame.setVisible(true);
+//	    	}
+//	    });
+//	    
+//	    NativeInterface.runEventPump();
+//	    
+//	    Runtime.getRuntime().addShutdownHook(new Thread(new Runnable() {
+//	    	@Override
+//	    	public void run() {
+//	    		NativeInterface.close(); //closing NativeInterface
+//	    	}
+//	    }));
+//	}
     
     /**
      * This method return the panel with our video.
