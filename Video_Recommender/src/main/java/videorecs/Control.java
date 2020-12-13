@@ -43,17 +43,20 @@ public class Control {
     /**
      * Minimum approval rating required for a recommended video
      */
-    static final double MIN_RATING = 0.80;
+//    static final double MIN_RATING = 0.80; // Original criteria
+    static final double MIN_RATING = 0.20; // Reduced criteria 
     
     /**
      * Minimum number of likes required for a recommended video 
      */
-    static final int MIN_LIKES = 5000;
+//    static final int MIN_LIKES = 5000; // Original criteria 
+    static final int MIN_LIKES = 50; // Reduced criteria 
     
     /**
      * Minimum number of views required for a recommended video
      */
-    static final int MIN_VIEWS = 15000;
+//    static final int MIN_VIEWS = 15000; // Original criteria
+    static final int MIN_VIEWS = 150; // Reduced criteria
 	
 	/**
 	 * Mainframe of Java Swing GUI that takes user input for YouTube video searches.
