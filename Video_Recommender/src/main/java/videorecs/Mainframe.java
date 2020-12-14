@@ -60,6 +60,11 @@ public class Mainframe extends JFrame {
 	static JRadioButton JRB_DURATION_LONG = new JRadioButton(">15 min");
 	static JRadioButton JRB_DURATION_ANY = new JRadioButton("Any");
 	
+	// CONSTRUCTOR
+	
+	/**
+	 * 
+	 */
 	public Mainframe() {
 		
 		super("Welcome!");
@@ -119,7 +124,7 @@ public class Mainframe extends JFrame {
 	    		
 	    		// Iterate over the array and add the activities to the ArrayList
 	    		for (String activity : activityArray) {
-	    			Mainframe.ACTIVITY_ARRAY_LIST.add(activity);
+	    			Mainframe.ACTIVITY_ARRAY_LIST.add(activity.toLowerCase());
 	    		}
 
 				if ((!Mainframe.ACTIVITY_ARRAY_LIST.get(0).trim().equals("")) && (Mainframe.DURATION != null)) {
@@ -127,13 +132,10 @@ public class Mainframe extends JFrame {
 					try {
 						createRecommendedVideosList();
 					} catch (GoogleJsonResponseException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} catch (GeneralSecurityException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
 						e1.printStackTrace();
 					}
 					
@@ -151,7 +153,7 @@ public class Mainframe extends JFrame {
     		@Override
            	public void actionPerformed(ActionEvent e) {
     			Control.MFRAME.setVisible(false);
-    			new ChildframeRecommendations();
+    			new ChildframeFavorites();
     		}
     	});    	
     	
@@ -187,7 +189,7 @@ public class Mainframe extends JFrame {
 	 * @param duration
 	 * @return
 	 */
-	public void createRecommendedVideosList() 
+	static void createRecommendedVideosList() 
 		throws GeneralSecurityException, IOException, GoogleJsonResponseException {
 		
     	// Build and return an authorized API client service.
@@ -321,7 +323,7 @@ public class Mainframe extends JFrame {
 		        	
 			        	// Only recommend up to NUMBER_VIDEOS to the user 
 		        	if ((counter_videos < Control.NUMBER_VIDEOS) && (!Mainframe.SEEN_LIST.contains(videoID))) {
-		        		Mainframe.RECOMMENDATION_LIST[counter_videos] = new Recommendation(videoTitle, videoDescription, videoID);
+		        		Mainframe.RECOMMENDATION_LIST[counter_videos] = new Recommendation(videoTitle, videoDescription, videoID, activity);
 		        		Mainframe.SEEN_LIST.add(videoID);
 		        		counter_videos++;
 		        	} else if (counter_videos >= Control.NUMBER_VIDEOS) {
@@ -335,7 +337,7 @@ public class Mainframe extends JFrame {
 //    	//***TESTING ONLY***
 //        System.out.println("Test: Recommendation List");
 //    	for (int x = 0; x < Mainframe.RECOMMENDATION_LIST.length; x++) {
-//        	System.out.println(Mainframe.RECOMMENDATION_LIST[x].getvideoID());
+//        	System.out.println(Mainframe.RECOMMENDATION_LIST[x].getVideoID());
 //        }
 //        System.out.println();
 //        System.out.println("Test: Seen List");
@@ -354,7 +356,7 @@ public class Mainframe extends JFrame {
      * @param videoDescription of given video
      * @return true if a keyword match is found, otherwise return false
      */
-    public boolean videoMeetsKeywordCriteria(String videoTitle, String  videoDescription) {
+    static boolean videoMeetsKeywordCriteria(String videoTitle, String  videoDescription) {
     	
     	// KEYWORDS: "how to", "tutorial", "demo", "tips on", "beginner", "intermediate", "advanced", "learn",
         // "easy", "hard", "great for", "education", "like a pro", "like a boss", "hack", etc.
@@ -365,8 +367,8 @@ public class Mainframe extends JFrame {
         	
     		String regex = "\\b" + keyword + "\\b";
         	Pattern p = Pattern.compile(regex);
-    		Matcher mVideoTitle = p.matcher(videoTitle);
-    		Matcher mVideoDescription = p.matcher(videoDescription);
+    		Matcher mVideoTitle = p.matcher(videoTitle.toLowerCase());
+    		Matcher mVideoDescription = p.matcher(videoDescription.toLowerCase());
         	
         	if (mVideoTitle.find() || mVideoDescription.find()) {
         		return true;
@@ -380,7 +382,7 @@ public class Mainframe extends JFrame {
      * @param videoRating of given video 
      * @return true if video's approval rating > 80%, otherwise return false
      */
-    public boolean videoMeetsRatingCriteria(double videoRating) {
+    static boolean videoMeetsRatingCriteria(double videoRating) {
     	
         if (videoRating > Control.MIN_RATING) {
         	return true;
@@ -393,7 +395,7 @@ public class Mainframe extends JFrame {
      * @param numOfLikes of given video 
      * @return true if video's like count > 5000, otherwise return false
      */
-    public boolean videoMeetsLikeCountCriteria(BigInteger numOfLikes) {
+    static boolean videoMeetsLikeCountCriteria(BigInteger numOfLikes) {
     	
     	try {
             if (numOfLikes.doubleValue() > Control.MIN_LIKES) {
@@ -410,7 +412,7 @@ public class Mainframe extends JFrame {
      * @param viewCount of given video 
      * @return true if video's view count > 15000, otherwise return false
      */
-    public boolean videoMeetsViewCountCriteria(BigInteger viewCount) {
+    static boolean videoMeetsViewCountCriteria(BigInteger viewCount) {
     	
     	try {
             if (viewCount.doubleValue() > Control.MIN_VIEWS) {
@@ -428,7 +430,7 @@ public class Mainframe extends JFrame {
      * @param numOfDislikes of given video
      * @return rating of video as a decimal number (0.00 if rating cannot be calculated)
      */
-    public double calculateVideoRating(BigInteger numOfLikes, BigInteger numOfDislikes) {
+    static double calculateVideoRating(BigInteger numOfLikes, BigInteger numOfDislikes) {
     	
     	try {
     		return (numOfLikes.doubleValue() / (numOfLikes.doubleValue() + numOfDislikes.doubleValue()));
@@ -442,7 +444,7 @@ public class Mainframe extends JFrame {
      * @param duration of video to parse
      * @return regex to use for parseVideoDuration
      */
-    public String parseVideoDurationHelper(String duration) {
+    static String parseVideoDurationHelper(String duration) {
     	
     	String regex = "";
     	// Duration contains hours, minutes, and seconds information
@@ -468,7 +470,7 @@ public class Mainframe extends JFrame {
      * @param duration of given video
      * @return duration of video in seconds (returns 0 if duration cannot be parsed to seconds)
      */
-    public int parseVideoDuration(String regex, String duration) {
+    static int parseVideoDuration(String regex, String duration) {
     	// PT1H23M45S - 1 hour(s), 23 minute(s), 45 second(s)
     	// PT3M20S - 0 hour(s), 3 minute(s), 20 second(s)
     	// PT1M13S - 0 hour(s), 1 minute(s), 13 second(s)
@@ -492,6 +494,10 @@ public class Mainframe extends JFrame {
 					minutes = m.group(2);
 					if (duration.contains("S")) {
 						seconds = m.group(3);
+					}
+				} else {
+					if (duration.contains("S")) {
+						seconds = m.group(2);
 					}
 				}
 			} else if (duration.contains("M")) {
@@ -529,7 +535,7 @@ public class Mainframe extends JFrame {
      * @param videoDurationSeconds total duration of given video, given in seconds
      * @return true if video meets duration criteria, false otherwise
      */
-    public boolean videoMeetsDurationCriteria(String durationCriteria, int videoDurationSeconds) {
+    static boolean videoMeetsDurationCriteria(String durationCriteria, int videoDurationSeconds) {
     	
     	// Check if video duration is < 5 minutes (under 300 seconds)
     	if (durationCriteria.equals("<5 min")) {
@@ -542,7 +548,7 @@ public class Mainframe extends JFrame {
     	
     	// Check if video duration is between 5 and 15 minutes (between 300 and 900 seconds)
     	if (durationCriteria.equals("5-15 min")) {
-    		if ((300 <= videoDurationSeconds) &&  (videoDurationSeconds < 900)) {
+    		if ((300 <= videoDurationSeconds) && (videoDurationSeconds <= 900)) {
     			return true;
     		} else {
     			return false;
