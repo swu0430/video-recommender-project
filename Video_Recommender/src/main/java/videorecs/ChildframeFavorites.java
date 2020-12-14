@@ -1,11 +1,17 @@
 package videorecs;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.net.URI;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -86,9 +92,33 @@ public class ChildframeFavorites extends JFrame {
         			
         			JLabel urlVideo = new JLabel("https://www.youtube.com/watch?v=" + Mainframe.FAVORITES_LIST.get(k).getVideoID());
         			Font f2 = urlVideo.getFont();
-        			urlVideo.setFont(f2.deriveFont(f2.getStyle() & ~Font.BOLD));
+        			final String VIDEOID = Mainframe.FAVORITES_LIST.get(k).getVideoID();
+        			urlVideo.setForeground(Color.BLUE.darker());
+        			urlVideo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        			
+        			// Add mouse listener to JLabel (hyper link) 
+        			urlVideo.addMouseListener(new MouseAdapter() {
+        				@Override
+        				public void mouseClicked(MouseEvent e) {
+        					try {
+        						Desktop.getDesktop().browse(
+        								new URI("https://www.youtube.com/watch?v=" 
+        										+ VIDEOID)); // Video ID 
+        					} catch (Exception e1) {
+        						System.out.println("Sorry, this URL could not be opened.");
+        					} 
+        				}
+
+        				@Override
+        				public void mouseEntered(MouseEvent e) {
+        					ChildframeRecommendations.JLABEL_LIST[0].setText("<html><a href=''>"
+        							+ "https://www.youtube.com/watch?v="
+        							+ VIDEOID // Video ID 
+        							+ "</a></html>");
+        				}
+        	    	});
+        			
         			panelVideosSection.add(urlVideo);
- 
         			panelVideosSection.add(new JLabel(" "));
         			
         		}
