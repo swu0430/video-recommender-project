@@ -33,6 +33,12 @@ import com.google.api.services.youtube.model.SearchListResponse;
 import com.google.api.services.youtube.model.SearchResult;
 import com.google.api.services.youtube.model.VideoListResponse;
 
+/**
+ * This class represents the mainframe Java Swing GUI through which the user will input an
+ * activity list and video duration preference to search for videos. The user will also have 
+ * the option to view a list of favorited videos or exit the program.
+ * @author Alicia Yen and Steven Wu
+ */
 public class Mainframe extends JFrame {
 
 	// STATIC VARIABLES
@@ -52,31 +58,63 @@ public class Mainframe extends JFrame {
 	 */
 	static ArrayList<String> SEEN_LIST = new ArrayList<String>();
 	
+	/**
+	 * JTextField - Java Swing GUI object to get user's inputted list of activities.
+	 */
 	static JTextField ACTIVITIES_TEXT_FIELD = new JTextField();
+	
+	/**
+	 * ArrayList to store parsed list of activities from the user.
+	 */
 	static ArrayList<String> ACTIVITY_ARRAY_LIST = new ArrayList<String>();
+	
+	/**
+	 * User's preferred video duration.
+	 */
 	static String DURATION;
+	
+	/**
+	 * JRadioButton - Java Swing GUI object to present user with a short video duration option.
+	 */
 	static JRadioButton JRB_DURATION_SHORT = new JRadioButton("<5 min");
+	
+	/**
+	 * JRadioButton - Java Swing GUI object to present user with a medium video duration option.
+	 */
 	static JRadioButton JRB_DURATION_MEDIUM = new JRadioButton("5-15 min");
+	
+	/**
+	 * JRadioButton - Java Swing GUI object to present user with a long duration option.
+	 */
 	static JRadioButton JRB_DURATION_LONG = new JRadioButton(">15 min");
+	
+	/**
+	 * JRadioButton - Java Swing GUI object to present user with a flexible video duration option.
+	 */
 	static JRadioButton JRB_DURATION_ANY = new JRadioButton("Any");
 	
 	// CONSTRUCTOR
 	
 	/**
-	 * 
+	 * Constructs the GUI display for the mainframe window.
+	 * Calls the constructor in the JFrame super class.
 	 */
 	public Mainframe() {
 		
+		// Call constructor in JFrame super class. 
+		// Define the title, close operation, and layout of window.
 		super("Welcome!");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 		
+		// Create JPanel for the introduction message
     	JPanel panelIntro = new JPanel();
     	JLabel labelIntro = new JLabel("Hi there! I'm going to dig up 5 neat educational videos for you. I just need a few pieces of information...");
     	Font fontIntro = new Font(labelIntro.getFont().getName(), Font.ITALIC, labelIntro.getFont().getSize());    	
     	labelIntro.setFont(fontIntro);
     	panelIntro.add(labelIntro);
     	
+    	// Create JPanel for the section in which the user will input a list of activities.
     	JPanel panelActivities = new JPanel();
     	BoxLayout boxlayout = new BoxLayout(panelActivities, BoxLayout.Y_AXIS);
     	panelActivities.setLayout(boxlayout);
@@ -84,9 +122,12 @@ public class Mainframe extends JFrame {
     	panelActivities.add(new Label("Enter a list of activities you do regularly, separated by commas (e.g., \"cooking, dancing, golf\"): "));
     	panelActivities.add(Mainframe.ACTIVITIES_TEXT_FIELD);
     	
+    	// Create JPanel for the section in which the user will select a preferred video duration.
     	JPanel panelDuration = new JPanel();
     	panelDuration.setBorder(BorderFactory.createTitledBorder("VIDEO DURATION PREFERENCE"));
 
+    	// Create an ActionListener object to process the user's video duration selection
+    	// using the JRadioButtons.
         ActionListener buttonListener = new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -95,31 +136,36 @@ public class Mainframe extends JFrame {
             }
         };
     	
+        // Add the ActionListner to each duration JRadioButton option.
         Mainframe.JRB_DURATION_SHORT.addActionListener(buttonListener);
         Mainframe.JRB_DURATION_MEDIUM.addActionListener(buttonListener);
         Mainframe.JRB_DURATION_LONG.addActionListener(buttonListener);
         Mainframe.JRB_DURATION_ANY.addActionListener(buttonListener);
         
+        // Create a ButtonGroup for each of the duration JRadioButton options.
     	ButtonGroup durationButtonGroup = new ButtonGroup();
     	durationButtonGroup.add(Mainframe.JRB_DURATION_SHORT);
     	durationButtonGroup.add(Mainframe.JRB_DURATION_MEDIUM);
     	durationButtonGroup.add(Mainframe.JRB_DURATION_LONG);
     	durationButtonGroup.add(Mainframe.JRB_DURATION_ANY);
     	
+    	// Add each duration JRadioButton option to the duration JPanel section.
         panelDuration.add(Mainframe.JRB_DURATION_SHORT);
     	panelDuration.add(Mainframe.JRB_DURATION_MEDIUM);
     	panelDuration.add(Mainframe.JRB_DURATION_LONG);
     	panelDuration.add(Mainframe.JRB_DURATION_ANY);
     	panelDuration.setAlignmentX(Component.RIGHT_ALIGNMENT);
     	
+    	// Create a JPanel for the closing buttons.
     	JPanel panelClosingButtons = new JPanel();
     	
+    	// Create a JButton for a closing option to submit the user's activity list and preferred video duration.
     	JButton submitButton = new JButton("Submit");
     	submitButton.addActionListener(new ActionListener() {
     		@Override
            	public void actionPerformed(ActionEvent e) {
 
-	    		//Convert the user's input into a String array by splitting at each comma.
+	    		// Convert the user's input into a String array by splitting at each comma.
 	    		String[] activityArray = Mainframe.ACTIVITIES_TEXT_FIELD.getText().trim().split("\\s*,\\s*");
 	    		
 	    		// Iterate over the array and add the activities to the ArrayList
@@ -127,10 +173,12 @@ public class Mainframe extends JFrame {
 	    			Mainframe.ACTIVITY_ARRAY_LIST.add(activity.toLowerCase());
 	    		}
 
+	    		// If the user inputs a valid activity list and selects one of the duration options...
 				if ((!Mainframe.ACTIVITY_ARRAY_LIST.get(0).trim().equals("")) && (Mainframe.DURATION != null)) {
 	
+					// Call the "createRecommendedVideoList" method to search for 3 recommended YouTube videos.
 					try {
-						createRecommendedVideosList();
+						Mainframe.createRecommendedVideosList();
 					} catch (GoogleJsonResponseException e1) {
 						e1.printStackTrace();
 					} catch (GeneralSecurityException e1) {
@@ -139,8 +187,11 @@ public class Mainframe extends JFrame {
 						e1.printStackTrace();
 					}
 					
+					// Open a childframe GUI window to display the 3 recommended videos to the user.
 					new ChildframeRecommendations();
-			   
+				
+				// If the user does not input a valid activity list and/or does not selects one of the 
+				// duration options, display an error message.
 				} else {
 					JOptionPane.showMessageDialog(null, "Invalid entry. Please try again.");
 					Mainframe.ACTIVITY_ARRAY_LIST.clear();
@@ -148,6 +199,7 @@ public class Mainframe extends JFrame {
            	}
     	});
     	
+    	// Create a JButton for a closing option to view the user's favorited (liked) videos.
     	JButton favoritesButton = new JButton("Favorites");
     	favoritesButton.addActionListener(new ActionListener() {
     		@Override
@@ -157,6 +209,7 @@ public class Mainframe extends JFrame {
     		}
     	});    	
     	
+    	// Create a JButton for a closing option to exit the program.
     	JButton exitButton = new JButton("Exit");
     	exitButton.addActionListener(new ActionListener() {
     		@Override
@@ -165,10 +218,12 @@ public class Mainframe extends JFrame {
     		}
     	});
     	
+    	// Add the "Submit," "Favorites," and "Exit" JButtons to the closing JPanel.
     	panelClosingButtons.add(submitButton);
     	panelClosingButtons.add(favoritesButton);
     	panelClosingButtons.add(exitButton);
     
+    	// Add all the panels to the mainframe's JFrame and set the JFrame to visible.
     	this.add(Box.createRigidArea(new Dimension(0,10)));
     	this.add(panelIntro);
     	this.add(Box.createRigidArea(new Dimension(0,30)));
@@ -184,10 +239,10 @@ public class Mainframe extends JFrame {
 
 	
 	/**
-	 * 
-	 * @param activityArrayList
-	 * @param duration
-	 * @return
+	 * Calls the YouTube Data API to search for a set of recommended videos for the user,
+	 * based on the user's inputted activity list and preferred video duration, as well as
+	 * other pre-set criteria for keyword matches, a minimum rating, a minimum like count, 
+	 * and a minimum view count.
 	 */
 	static void createRecommendedVideosList() 
 		throws GeneralSecurityException, IOException, GoogleJsonResponseException {
@@ -198,7 +253,9 @@ public class Mainframe extends JFrame {
     	// Create a new ApiCall object
     	ApiCalls apiCalls = new ApiCalls();
 		
-		// Set up the YouTube "Search: list" API call to search for videos
+		/*
+		 *  Set up the YouTube "Search: list" API call to search for videos
+		 */
 		  
     	// part --> set this ArrayList to include "snippet"
     	ArrayList<String> partSearchList = new ArrayList<String>();
@@ -247,7 +304,9 @@ public class Mainframe extends JFrame {
 	    		videoIDs.add(sr.getId().getVideoId());
 	    	}
 	    	
-	    	// Set up the "Videos: list" API call to get more details on a video
+	    	/*
+	    	 *  Set up the "Videos: list" API call to get more details on a video
+	    	 */
 	    	
 	    	// part --> set this ArrayList to include "contentDetails" and "statistics"
 	    	ArrayList<String> partVideosList = new ArrayList<String>();
@@ -307,21 +366,22 @@ public class Mainframe extends JFrame {
 		        // Check if video meets keyword criteria 
 		        keywordCriteria = videoMeetsKeywordCriteria(videoTitle, videoDescription);
 		        
-		        // Check if video meets video rating criteria (> 80%) 
+		        // Check if video meets video rating criteria (as defined in the Control class) 
 		        videoRating = calculateVideoRating(numOfLikes, numOfDislikes);
 		        ratingCriteria = videoMeetsRatingCriteria(videoRating);
 		        
-		        // Check if video meets minimum like count criteria (> 5k) 
+		        // Check if video meets minimum like count criteria (as defined in the Control class) 
 		        likeCountCriteria = videoMeetsLikeCountCriteria(numOfLikes);
 		        
-		        // Check if video meets minimum view count criteria (> 15k) 
+		        // Check if video meets minimum view count criteria (as defined in the Control class) 
 		        viewCountCriteria = videoMeetsViewCountCriteria(viewCount);
 		        
-		        // If the video meets all the criteria, create a new recommended video and increase counter_videos.	
+		        // If the video meets all the criteria, create a new recommended video, add the video
+		        // to the list of seen videos, and increase counter_videos.	
 		        if (durationCriteria && keywordCriteria && ratingCriteria &&
 		        	viewCountCriteria && likeCountCriteria) {
 		        	
-			        	// Only recommend up to NUMBER_VIDEOS to the user 
+			        // Only recommend up to NUMBER_VIDEOS to the user 
 		        	if ((counter_videos < Control.NUMBER_VIDEOS) && (!Mainframe.SEEN_LIST.contains(videoID))) {
 		        		Mainframe.RECOMMENDATION_LIST[counter_videos] = new Recommendation(videoTitle, videoDescription, videoID, activity);
 		        		Mainframe.SEEN_LIST.add(videoID);
@@ -351,7 +411,7 @@ public class Mainframe extends JFrame {
 
     /**
      * Helper method to check if a potential recommended video meets the keyword criteria by 
-     * searching for keywords in video (1) titles (2) descriptions
+     * searching for keywords in video (1) titles and (2) descriptions
      * @param videoTitle of given video 
      * @param videoDescription of given video
      * @return true if a keyword match is found, otherwise return false
@@ -378,9 +438,10 @@ public class Mainframe extends JFrame {
     }
     
     /**
-     * Helper method to check if a potential recommended video meets the approval rating criteria 
+     * Helper method to check if a potential recommended video meets the minimum approval rating criteria 
+     * (as defined in the Control class)
      * @param videoRating of given video 
-     * @return true if video's approval rating > 80%, otherwise return false
+     * @return true if video's approval rating > minimum, otherwise return false
      */
     static boolean videoMeetsRatingCriteria(double videoRating) {
     	
@@ -392,8 +453,9 @@ public class Mainframe extends JFrame {
     
     /**
      * Helper method to check if a potential recommended video meets the minimum like count criteria
+     * (as defined in the Control class)
      * @param numOfLikes of given video 
-     * @return true if video's like count > 5000, otherwise return false
+     * @return true if video's like count > minimum, otherwise return false
      */
     static boolean videoMeetsLikeCountCriteria(BigInteger numOfLikes) {
     	
@@ -409,8 +471,9 @@ public class Mainframe extends JFrame {
     
     /**
      * Helper method to check if a potential recommended video meets the minimum view count criteria
+     * (as defined in the Control class)
      * @param viewCount of given video 
-     * @return true if video's view count > 15000, otherwise return false
+     * @return true if video's view count > minimum, otherwise return false
      */
     static boolean videoMeetsViewCountCriteria(BigInteger viewCount) {
     	
@@ -440,18 +503,18 @@ public class Mainframe extends JFrame {
     }
     
     /**
-     * Helper method to help parse video duration
+     * Helper method to parse video duration
      * @param duration of video to parse
-     * @return regex to use for parseVideoDuration
+     * @return regex to pass to parseVideoDuration method
      */
     static String parseVideoDurationHelper(String duration) {
     	
     	String regex = "";
-    	// Duration contains hours, minutes, and seconds information
+    	// Duration contains hours information
     	if (duration.contains("H")) {
     		regex = "PT([0-9]+)H([0-9]*)M*([0-9]*)S*";
     		
-    	// Duration contains minutes and seconds information
+    	// Duration doesn't contain hours information but contains minutes information
     	} else if (duration.contains("M")) {
     		regex = "PT([0-9]+)M([0-9]*)S*";
     	
@@ -465,7 +528,7 @@ public class Mainframe extends JFrame {
     
     /**
      * Parses video duration information by converting duration to seconds 
-     * Uses helper methods: parseVideoDurationHelper 
+     * Uses helper method: parseVideoDurationHelper 
      * @param regex to use for parsing
      * @param duration of given video
      * @return duration of video in seconds (returns 0 if duration cannot be parsed to seconds)

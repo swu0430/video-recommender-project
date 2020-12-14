@@ -34,13 +34,27 @@ import javax.swing.event.HyperlinkListener;
 
 import com.google.api.client.googleapis.json.GoogleJsonResponseException;
 
+/**
+ * This class represents a childframe Java Swing GUI that displays a list of 3 YouTube video
+ * recommendations to the user based on the user's inputted activity list and video duration
+ * preferences in the mainframe GUI.
+ * @author Alicia Yen and Steven Wu
+ */
 public class ChildframeRecommendations extends JFrame {
 
 	/**
-	 * JPanel objects
+	 * JPanel objects for the first recommended video.
 	 */
 	static JPanel PANEL_VIDEO1 = new JPanel();
+	
+	/**
+	 * JPanel objects for the second recommended video.
+	 */
 	static JPanel PANEL_VIDEO2 = new JPanel();
+	
+	/**
+	 * JPanel objects for the third recommended video.
+	 */
 	static JPanel PANEL_VIDEO3 = new JPanel();
 	
 	/**
@@ -54,37 +68,71 @@ public class ChildframeRecommendations extends JFrame {
 	static JLabel[] JLABEL_LIST = new JLabel [Control.NUMBER_VIDEOS];
 	
 	/**
-	 * Buttons a user can press to indicate whether they liked or disliked a recommended video 
+	 * Button a user can press to indicate whether they liked the first recommended video.
 	 */
 	static JRadioButton JRB_LIKE1 = new JRadioButton("Like");
+	
+	/**
+	 * Button a user can press to indicate whether they liked the second recommended video.
+	 */
 	static JRadioButton JRB_LIKE2 = new JRadioButton("Like");
+	
+	/**
+	 * Button a user can press to indicate whether they liked the third recommended video.
+	 */
 	static JRadioButton JRB_LIKE3 = new JRadioButton("Like");
+	
+	/**
+	 * Button a user can press to indicate whether they disliked the first recommended video.
+	 */
 	static JRadioButton JRB_DISLIKE1 = new JRadioButton("Dislike");
+	
+	/**
+	 * Button a user can press to indicate whether they disliked the second recommended video.
+	 */
 	static JRadioButton JRB_DISLIKE2 = new JRadioButton("Dislike");
+	
+	/**
+	 * Button a user can press to indicate whether they disliked the third recommended video.
+	 */
 	static JRadioButton JRB_DISLIKE3 = new JRadioButton("Dislike");
 	
 	/**
-	 * Boolean variables to capture feedback from user 
-	 * True indicates user liked the video
-	 * False indicates user disliked the video
+	 * Boolean variable to capture feedback from user 
+	 * True indicates user liked the first video
+	 * False indicates user disliked the first video
 	 */
 	static Boolean LIKE1;
+	
+	/**
+	 * Boolean variable to capture feedback from user 
+	 * True indicates user liked the second video
+	 * False indicates user disliked the second video
+	 */
 	static Boolean LIKE2;
+	
+	/**
+	 * Boolean variable to capture feedback from user 
+	 * True indicates user liked the third video
+	 * False indicates user disliked the third video
+	 */
 	static Boolean LIKE3;
 	
-	
+	/**
+	 * Constructs the GUI display for 3 recommended videos.
+	 * Calls the constructor in the JFrame super class.
+	 */
 	public ChildframeRecommendations() {
+		
+		// Call constructor in JFrame super class.
+		// Define the title, close operation, and layout of window.
 		super("Your Video Recommendations");
-		
-		Control.MFRAME.setVisible(false);
-		
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 		
-		/**
-		 * JPANELS 
-		 */
-		
+		// Set the mainframe to invisible.
+		Control.MFRAME.setVisible(false);
+
 		// JPanel introduction section 
     	JPanel panelIntro = new JPanel();
     	JLabel labelIntro = new JLabel("Here are your recommended videos. Take a look and see if you like these!");
@@ -95,17 +143,16 @@ public class ChildframeRecommendations extends JFrame {
     	// JPanel closing section
     	JPanel panelClosingButtons = new JPanel();
     	
-    	
     	// Create multiple JPanels for recommended videos 
     	for (int i = 0; i < Mainframe.RECOMMENDATION_LIST.length; i++) {
     		ChildframeRecommendations.JPANEL_LIST[i].setLayout(new FlowLayout(FlowLayout.LEFT));
-    		ChildframeRecommendations.JPANEL_LIST[i].setBorder(BorderFactory.createTitledBorder("VIDEO: "));
+    		ChildframeRecommendations.JPANEL_LIST[i].setBorder(BorderFactory.createTitledBorder("VIDEO " + (i + 1) + ": "));
     		ChildframeRecommendations.JPANEL_LIST[i].add(new Label(Mainframe.RECOMMENDATION_LIST[i].getTitle()));
     		ChildframeRecommendations.JPANEL_LIST[i].add(new Label());
     	}
     	
-    	/**
-    	 * JLABELS 
+    	/* 
+    	 * JLABELS
     	 * Used to display YouTube hyper links
     	 */
     	
@@ -117,10 +164,11 @@ public class ChildframeRecommendations extends JFrame {
     		ChildframeRecommendations.JLABEL_LIST[i].setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     	}
     	
-    	/**
+
+    	/* 
     	 * LIKE/DISLIKE BUTTONS
     	 */
-        
+
     	// Group like/dislike buttons for video 1
     	final ButtonGroup likeDislikeButtonGroup1 = new ButtonGroup();
     	likeDislikeButtonGroup1.add(ChildframeRecommendations.JRB_LIKE1);
@@ -137,11 +185,11 @@ public class ChildframeRecommendations extends JFrame {
     	likeDislikeButtonGroup3.add(ChildframeRecommendations.JRB_DISLIKE3);
     	
 
-    	/**
+    	/*
     	 * Create action listener for like/dislike buttons 
-    	 * If a user clicks "like", then that video is added to their favorites list
-    	 * If a user clicks "dislike", the video is not added to the favorites list.
-    	 * User must click either "like" or "dislike" for each video before clicking "submit"
+    	 * If a user clicks "like", then that video is later added to their favorites list
+    	 * If a user clicks "dislike", the video is not later added to the favorites list.
+    	 * User must click either "like" or "dislike" for each video before clicking "submit" 
     	 */
     	ActionListener buttonListener = new ActionListener() {
     		@Override 
@@ -152,21 +200,18 @@ public class ChildframeRecommendations extends JFrame {
     			if (button.equals(ChildframeRecommendations.JRB_LIKE1)) {
     				if (ChildframeRecommendations.JRB_LIKE1.getModel().isSelected()) {
     					ChildframeRecommendations.LIKE1 = Boolean.TRUE;
-    					Mainframe.FAVORITES_LIST.add(Mainframe.RECOMMENDATION_LIST[0]);
     				}
     			}
     			// Check if like button for video 2 is pressed  
     			if (button.equals(ChildframeRecommendations.JRB_LIKE2)) {
     				if (ChildframeRecommendations.JRB_LIKE2.getModel().isSelected()) {
     					ChildframeRecommendations.LIKE2 = Boolean.TRUE;
-    					Mainframe.FAVORITES_LIST.add(Mainframe.RECOMMENDATION_LIST[1]);
     				}
     			}
     			// Check if like button for video 3 is pressed 
     			if (button.equals(ChildframeRecommendations.JRB_LIKE3)) {
     				if (ChildframeRecommendations.JRB_LIKE3.getModel().isSelected()) {
     					ChildframeRecommendations.LIKE3 = Boolean.TRUE;
-    					Mainframe.FAVORITES_LIST.add(Mainframe.RECOMMENDATION_LIST[2]);
     				}
     			}
     			// Check if dislike button for video 1 is pressed 
@@ -198,7 +243,7 @@ public class ChildframeRecommendations extends JFrame {
     	ChildframeRecommendations.JRB_DISLIKE2.addActionListener(buttonListener);
     	ChildframeRecommendations.JRB_DISLIKE3.addActionListener(buttonListener);
     	
-    	/**
+    	/*
     	 * MOUSE LISTENERS
     	 * Used to interact with the hyper links (JLabels)
     	 */
@@ -271,23 +316,26 @@ public class ChildframeRecommendations extends JFrame {
     	
     	// Add label (YouTube hyper link) and like/dislike buttons to panel 1 
     	ChildframeRecommendations.PANEL_VIDEO1.add(ChildframeRecommendations.JLABEL_LIST[0]);
+    	ChildframeRecommendations.PANEL_VIDEO1.add(new Label());
     	ChildframeRecommendations.PANEL_VIDEO1.add(ChildframeRecommendations.JRB_LIKE1);
     	ChildframeRecommendations.PANEL_VIDEO1.add(ChildframeRecommendations.JRB_DISLIKE1);
     	
     	// Add label (YouTube hyper link) and like/dislike buttons to panel 2
     	ChildframeRecommendations.PANEL_VIDEO2.add(ChildframeRecommendations.JLABEL_LIST[1]);
+    	ChildframeRecommendations.PANEL_VIDEO2.add(new Label());
     	ChildframeRecommendations.PANEL_VIDEO2.add(ChildframeRecommendations.JRB_LIKE2);
     	ChildframeRecommendations.PANEL_VIDEO2.add(ChildframeRecommendations.JRB_DISLIKE2);
     	
     	// Add label (YouTube hyper link) and like/dislike buttons to panel 3
     	ChildframeRecommendations.PANEL_VIDEO3.add(ChildframeRecommendations.JLABEL_LIST[2]);
+    	ChildframeRecommendations.PANEL_VIDEO3.add(new Label());
     	ChildframeRecommendations.PANEL_VIDEO3.add(ChildframeRecommendations.JRB_LIKE3);
     	ChildframeRecommendations.PANEL_VIDEO3.add(ChildframeRecommendations.JRB_DISLIKE3);
 		
 		
-    	/**
+    	/*
     	 * Clicking this button brings you back to the first window 
-    	 * This also clears the information from the JFrames and JPanels 
+    	 * This also clears the information from the JFrame and JPanels 
     	 */
 	   	JButton backButton = new JButton("Go Back");
 	   	backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -304,7 +352,7 @@ public class ChildframeRecommendations extends JFrame {
     		}
     	});
     	
-    	/**
+    	/*
     	 * Submit your video likes/dislikes and takes you to Favorites page
     	 */
     	JButton submitButton = new JButton("Submit");
@@ -317,8 +365,23 @@ public class ChildframeRecommendations extends JFrame {
     				&& (ChildframeRecommendations.LIKE2 != null) 
     				&& (ChildframeRecommendations.LIKE3 != null))  {
     				
-    				// Create favorites list
+    				// Adjust favorites list
+    				if (ChildframeRecommendations.LIKE1) {
+    					Mainframe.RECOMMENDATION_LIST[0].setLike(true);
+    				}
+    				if (ChildframeRecommendations.LIKE2) {
+    					Mainframe.RECOMMENDATION_LIST[1].setLike(true);
+    				}
+    				if (ChildframeRecommendations.LIKE3) {
+    					Mainframe.RECOMMENDATION_LIST[2].setLike(true);
+    				}
     				
+    				for (int i = 0; i < Mainframe.RECOMMENDATION_LIST.length; i++) {
+    					if (Mainframe.RECOMMENDATION_LIST[i].getLike()) {
+    						Mainframe.FAVORITES_LIST.add(Mainframe.RECOMMENDATION_LIST[i]);
+    					}
+    				}
+
     				// Clear information 
         			dispose();
         			Control.MFRAME.setVisible(false);
@@ -351,6 +414,7 @@ public class ChildframeRecommendations extends JFrame {
     	panelClosingButtons.add(backButton);
     	panelClosingButtons.add(submitButton);
 		
+    	// Add all the panels to the JFrame and set the JFrame to visible.
 		this.add(Box.createRigidArea(new Dimension(0,10)));
 		this.add(panelIntro);
 		

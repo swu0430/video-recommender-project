@@ -138,11 +138,11 @@ public class MainframeTest {
 		
 		//GENERAL CASES
 		assertTrue(Mainframe.videoMeetsRatingCriteria(100.0));
-		assertTrue(Mainframe.videoMeetsRatingCriteria(0.81));
-		assertFalse(Mainframe.videoMeetsRatingCriteria(0.79));
+		assertTrue(Mainframe.videoMeetsRatingCriteria(Control.MIN_RATING + 1));
+		assertFalse(Mainframe.videoMeetsRatingCriteria(Control.MIN_RATING - 1));
 		
 		//EDGE CASES
-		assertFalse(Mainframe.videoMeetsRatingCriteria(0.80));
+		assertFalse(Mainframe.videoMeetsRatingCriteria(Control.MIN_RATING));
 		assertFalse(Mainframe.videoMeetsRatingCriteria(0.0));
 		
 	}
@@ -151,12 +151,12 @@ public class MainframeTest {
 	public void testVideoMeetsLikeCountCriteria() {
 		
 		//GENERAL CASES
-		assertTrue(Mainframe.videoMeetsLikeCountCriteria(BigInteger.valueOf(100000)));
-		assertTrue(Mainframe.videoMeetsLikeCountCriteria(BigInteger.valueOf(5001)));
-		assertFalse(Mainframe.videoMeetsLikeCountCriteria(BigInteger.valueOf(4999)));
+		assertTrue(Mainframe.videoMeetsLikeCountCriteria(BigInteger.valueOf(Control.MIN_LIKES + 100000)));
+		assertTrue(Mainframe.videoMeetsLikeCountCriteria(BigInteger.valueOf(Control.MIN_LIKES + 1)));
+		assertFalse(Mainframe.videoMeetsLikeCountCriteria(BigInteger.valueOf(Control.MIN_LIKES - 1)));
 		
 		//EDGE CASES
-		assertFalse(Mainframe.videoMeetsLikeCountCriteria(BigInteger.valueOf(5000)));
+		assertFalse(Mainframe.videoMeetsLikeCountCriteria(BigInteger.valueOf(Control.MIN_LIKES)));
 		assertFalse(Mainframe.videoMeetsLikeCountCriteria(BigInteger.valueOf(0)));
 		
 	}
@@ -165,12 +165,12 @@ public class MainframeTest {
 	public void testVideoMeetsViewCountCriteria() {
 		
 		//GENERAL CASES
-		assertTrue(Mainframe.videoMeetsViewCountCriteria(BigInteger.valueOf(100000)));
-		assertTrue(Mainframe.videoMeetsViewCountCriteria(BigInteger.valueOf(15001)));
-		assertFalse(Mainframe.videoMeetsViewCountCriteria(BigInteger.valueOf(14999)));
+		assertTrue(Mainframe.videoMeetsViewCountCriteria(BigInteger.valueOf(Control.MIN_VIEWS + 100000)));
+		assertTrue(Mainframe.videoMeetsViewCountCriteria(BigInteger.valueOf(Control.MIN_VIEWS + 1)));
+		assertFalse(Mainframe.videoMeetsViewCountCriteria(BigInteger.valueOf(Control.MIN_VIEWS - 1)));
 		
 		//EDGE CASES
-		assertFalse(Mainframe.videoMeetsViewCountCriteria(BigInteger.valueOf(15000)));
+		assertFalse(Mainframe.videoMeetsViewCountCriteria(BigInteger.valueOf(Control.MIN_VIEWS)));
 		assertFalse(Mainframe.videoMeetsViewCountCriteria(BigInteger.valueOf(0)));
 		
 	}
