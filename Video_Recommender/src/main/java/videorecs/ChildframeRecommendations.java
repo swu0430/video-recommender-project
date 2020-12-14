@@ -112,7 +112,7 @@ public class ChildframeRecommendations extends JFrame {
     	// Create multiple JLabels for recommended videos 
     	for (int i = 0; i < Mainframe.RECOMMENDATION_LIST.length; i++) {
     		ChildframeRecommendations.JLABEL_LIST[i] = new JLabel("https://www.youtube.com/watch?v=" 
-    													+ Mainframe.RECOMMENDATION_LIST[i].getvideoID());
+    													+ Mainframe.RECOMMENDATION_LIST[i].getVideoID());
     		ChildframeRecommendations.JLABEL_LIST[i].setForeground(Color.BLUE.darker());
     		ChildframeRecommendations.JLABEL_LIST[i].setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
     	}
@@ -210,7 +210,7 @@ public class ChildframeRecommendations extends JFrame {
 				try {
 					Desktop.getDesktop().browse(
 							new URI("https://www.youtube.com/watch?v=" 
-									+ Mainframe.RECOMMENDATION_LIST[0].getvideoID())); // Video ID 
+									+ Mainframe.RECOMMENDATION_LIST[0].getVideoID())); // Video ID 
 				} catch (Exception e1) {
 					System.out.println("Sorry, this URL could not be opened.");
 				} 
@@ -220,7 +220,7 @@ public class ChildframeRecommendations extends JFrame {
 			public void mouseEntered(MouseEvent e) {
 				ChildframeRecommendations.JLABEL_LIST[0].setText("<html><a href=''>"
 						+ "https://www.youtube.com/watch?v="
-						+ Mainframe.RECOMMENDATION_LIST[0].getvideoID() // Video ID 
+						+ Mainframe.RECOMMENDATION_LIST[0].getVideoID() // Video ID 
 						+ "</a></html>");
 			}
     	});
@@ -232,7 +232,7 @@ public class ChildframeRecommendations extends JFrame {
 				try {
 					Desktop.getDesktop().browse(
 							new URI("https://www.youtube.com/watch?v=" 
-									+ Mainframe.RECOMMENDATION_LIST[1].getvideoID())); // Video ID
+									+ Mainframe.RECOMMENDATION_LIST[1].getVideoID())); // Video ID
 				} catch (Exception e1) {
 					System.out.println("Sorry, this URL could not be opened.");
 				} 
@@ -242,7 +242,7 @@ public class ChildframeRecommendations extends JFrame {
 			public void mouseEntered(MouseEvent e) {
 				ChildframeRecommendations.JLABEL_LIST[1].setText("<html><a href=''>"
 						+ "https://www.youtube.com/watch?v="
-						+ Mainframe.RECOMMENDATION_LIST[1].getvideoID() // Video ID 
+						+ Mainframe.RECOMMENDATION_LIST[1].getVideoID() // Video ID 
 						+ "</a></html>");
 			}
     	});
@@ -254,7 +254,7 @@ public class ChildframeRecommendations extends JFrame {
 				try {
 					Desktop.getDesktop().browse(
 							new URI("https://www.youtube.com/watch?v=" 
-									+ Mainframe.RECOMMENDATION_LIST[2].getvideoID())); // Video ID
+									+ Mainframe.RECOMMENDATION_LIST[2].getVideoID())); // Video ID
 				} catch (Exception e1) {
 					System.out.println("Sorry, this URL could not be opened.");
 				} 
@@ -264,7 +264,7 @@ public class ChildframeRecommendations extends JFrame {
 			public void mouseEntered(MouseEvent e) {
 				ChildframeRecommendations.JLABEL_LIST[2].setText("<html><a href=''>"
 						+ "https://www.youtube.com/watch?v="
-						+ Mainframe.RECOMMENDATION_LIST[2].getvideoID() // Video ID 
+						+ Mainframe.RECOMMENDATION_LIST[2].getVideoID() // Video ID 
 						+ "</a></html>");
 			}
     	});
