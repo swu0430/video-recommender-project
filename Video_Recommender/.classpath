@@ -35,9 +35,12 @@
 			<attribute name="maven.pomderived" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/swu04/Downloads/DJNativeSwing-SWT-1-0-3-20191112/DJNativeSwing.jar"/>
-	<classpathentry kind="lib" path="C:/Users/swu04/Downloads/DJNativeSwing-SWT-1-0-3-20191112/DJNativeSwing-SWT.jar"/>
-	<classpathentry kind="lib" path="C:/Users/swu04/Downloads/DJNativeSwing-SWT-1-0-3-20191112/lib/swt/swt-4.3-win32-win32-x86_64.jar"/>
-	<classpathentry kind="lib" path="C:/Users/swu04/Downloads/DJNativeSwing-SWT-1-0-3-20191112/lib/swt/swt-4.3-win32-win32-x86.jar"/>
+	<classpathentry kind="lib" path="C:/Users/swu04/.p2/pool/plugins/org.junit.jupiter.api_5.6.0.v20200203-2009.jar">
+		<attributes>
+			<attribute name="javadoc_location" value="http://junit.org/junit5/docs/current/api/"/>
+		</attributes>
+	</classpathentry>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/5"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.junit.JUNIT_CONTAINER/4"/>
 	<classpathentry kind="output" path="target/classes"/>
 </classpath>
