@@ -110,7 +110,6 @@ public class Mainframe extends JFrame {
     	JPanel panelClosingButtons = new JPanel();
     	
     	JButton submitButton = new JButton("Submit");
-    	
     	submitButton.addActionListener(new ActionListener() {
     		@Override
            	public void actionPerformed(ActionEvent e) {
@@ -320,7 +319,7 @@ public class Mainframe extends JFrame {
 		        if (durationCriteria && keywordCriteria && ratingCriteria &&
 		        	viewCountCriteria && likeCountCriteria) {
 		        	
-		        	// Only recommend up to NUMBER_VIDEOS to the user 
+			        	// Only recommend up to NUMBER_VIDEOS to the user 
 		        	if ((counter_videos < Control.NUMBER_VIDEOS) && (!Mainframe.SEEN_LIST.contains(videoID))) {
 		        		Mainframe.RECOMMENDATION_LIST[counter_videos] = new Recommendation(videoTitle, videoDescription, videoID);
 		        		Mainframe.SEEN_LIST.add(videoID);
@@ -328,7 +327,7 @@ public class Mainframe extends JFrame {
 		        	} else if (counter_videos >= Control.NUMBER_VIDEOS) {
 		        		// Stop searching for videos to recommend if you have > NUMBER_VIDEOS recommended videos
 		        		break;
-		        	}			        
+		        	}
 		        }
 	    	} // end of inner for loop
     	} // end of outer while loop 
