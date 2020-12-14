@@ -44,7 +44,7 @@ public class Control {
      * Minimum approval rating required for a recommended video
      */
 //    static final double MIN_RATING = 0.80; // Original criteria
-    static final double MIN_RATING = 0.20; // Reduced criteria 
+    static final double MIN_RATING = 0.60; // Reduced criteria 
     
     /**
      * Minimum number of likes required for a recommended video 
@@ -76,7 +76,7 @@ public class Control {
     }
 	
     /**
-     * Main function - creates a Java Swing UI mainframe to take user input and then search for YouTube videos.
+     * Main function - Creates a Java Swing UI mainframe to take user input and then search for YouTube videos.
      */
     public static void main(String[] args) {
 		
