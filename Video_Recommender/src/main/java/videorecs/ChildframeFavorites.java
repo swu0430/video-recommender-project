@@ -1,11 +1,18 @@
 package videorecs;
 
+import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Label;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.net.URI;
 import java.util.ArrayList;
 
 import javax.swing.BorderFactory;
@@ -74,7 +81,7 @@ public class ChildframeFavorites extends JFrame {
     		panelVideosSection.setLayout(boxlayout);
     		panelVideosSection.setBorder(BorderFactory.createTitledBorder(ChildframeFavorites.FAVORITE_ACTIVITIES.get(j).toUpperCase()));
     	
-        	// Within each activity sub-JPanel, display all the videos videos associated with that activity that 
+        	// Within each activity sub-JPanel, display all the videos associated with that activity that 
     		// the user has liked. Display both the title and URL of each video.
     		for (int k = 0; k < Mainframe.FAVORITES_LIST.size(); k++) {
         		if (Mainframe.FAVORITES_LIST.get(k).getActivity().equals(ChildframeFavorites.FAVORITE_ACTIVITIES.get(j))) {
@@ -85,8 +92,34 @@ public class ChildframeFavorites extends JFrame {
         			panelVideosSection.add(titleVideo);
         			
         			JLabel urlVideo = new JLabel("https://www.youtube.com/watch?v=" + Mainframe.FAVORITES_LIST.get(k).getVideoID());
+        			final String VIDEOID = Mainframe.FAVORITES_LIST.get(k).getVideoID();
         			Font f2 = urlVideo.getFont();
-        			urlVideo.setFont(f2.deriveFont(f2.getStyle() & ~Font.BOLD));
+        			urlVideo.setForeground(Color.BLUE.darker());
+        			urlVideo.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        			
+        			// Add mouse listener to JLabel (hyper link) 
+        			urlVideo.addMouseListener(new MouseAdapter() {
+        				@Override
+        				public void mouseClicked(MouseEvent e) {
+        					try {
+        						Desktop.getDesktop().browse(
+        								new URI("https://www.youtube.com/watch?v=" 
+        										+ VIDEOID)); // Video ID 
+        					} catch (Exception e1) {
+        						System.out.println("Sorry, this URL could not be opened.");
+        					} 
+        				}
+
+        				@Override
+        				public void mouseEntered(MouseEvent e) {
+        					ChildframeRecommendations.JLABEL_LIST[0].setText("<html><a href=''>"
+        							+ "https://www.youtube.com/watch?v="
+        							+ VIDEOID // Video ID 
+        							+ "</a></html>");
+        				}
+        	    	});
+        			
+        			
         			panelVideosSection.add(urlVideo);
  
         			panelVideosSection.add(new JLabel(" "));
@@ -99,6 +132,19 @@ public class ChildframeFavorites extends JFrame {
         	panelVideos.add(Box.createRigidArea(new Dimension(0,20)));
         	
     	}
+    	
+//    	/**
+//    	 * Create mouse listeners 
+//    	 * Used to interact with the hyper links (JLabels) 
+//    	 */
+//    	
+//    	MouseListener mouseListener = new MouseAdapter() {
+//    		@Override
+//    		public void mouseClicked(MouseEvent e) {
+//    			JLabel url = (JLabel) e.getSource();
+//    		}
+//    		
+//    	};
    
     	// Create a JPanel for the closing "OK" button.
     	JPanel panelClosingButtons = new JPanel();

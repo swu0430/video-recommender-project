@@ -316,19 +316,19 @@ public class ChildframeRecommendations extends JFrame {
     	
     	// Add label (YouTube hyper link) and like/dislike buttons to panel 1 
     	ChildframeRecommendations.PANEL_VIDEO1.add(ChildframeRecommendations.JLABEL_LIST[0]);
-    	ChildframeRecommendations.PANEL_VIDEO1.add(new Label());
+    	ChildframeRecommendations.PANEL_VIDEO1.add(new JLabel(" "));
     	ChildframeRecommendations.PANEL_VIDEO1.add(ChildframeRecommendations.JRB_LIKE1);
     	ChildframeRecommendations.PANEL_VIDEO1.add(ChildframeRecommendations.JRB_DISLIKE1);
     	
     	// Add label (YouTube hyper link) and like/dislike buttons to panel 2
     	ChildframeRecommendations.PANEL_VIDEO2.add(ChildframeRecommendations.JLABEL_LIST[1]);
-    	ChildframeRecommendations.PANEL_VIDEO2.add(new Label());
+    	ChildframeRecommendations.PANEL_VIDEO2.add(new JLabel(" "));
     	ChildframeRecommendations.PANEL_VIDEO2.add(ChildframeRecommendations.JRB_LIKE2);
     	ChildframeRecommendations.PANEL_VIDEO2.add(ChildframeRecommendations.JRB_DISLIKE2);
     	
     	// Add label (YouTube hyper link) and like/dislike buttons to panel 3
     	ChildframeRecommendations.PANEL_VIDEO3.add(ChildframeRecommendations.JLABEL_LIST[2]);
-    	ChildframeRecommendations.PANEL_VIDEO3.add(new Label());
+    	ChildframeRecommendations.PANEL_VIDEO3.add(new JLabel(" "));
     	ChildframeRecommendations.PANEL_VIDEO3.add(ChildframeRecommendations.JRB_LIKE3);
     	ChildframeRecommendations.PANEL_VIDEO3.add(ChildframeRecommendations.JRB_DISLIKE3);
 		
