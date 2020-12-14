@@ -24,6 +24,11 @@ public class Recommendation {
 	private String videoID;
 	
 	/**
+	 * Activity category of recommended video.
+	 */
+	private String activity;
+	
+	/**
 	 * Boolean to represent whether the user likes the video.
 	 */
 	private boolean like; 
@@ -36,10 +41,11 @@ public class Recommendation {
 	 * @param description of recommended video
 	 * @param videoID of recommended video
 	 */
-	public Recommendation(String title, String description, String videoID) {
+	public Recommendation(String title, String description, String videoID, String activity) {
 		this.title = title;
 		this.description = description;
 		this.videoID = videoID;
+		this.activity = activity;
 		this.like = false;
 	}
 	
@@ -65,8 +71,16 @@ public class Recommendation {
 	 * Returns the videoID of the recommended video.
 	 * @return videoID of video
 	 */
-	public String getvideoID() {
+	public String getVideoID() {
 		return this.videoID;
+	}
+	
+	/**
+	 * Returns the activity category of the recommended video.
+	 * @return activity of video
+	 */
+	public String getActivity() {
+		return this.activity;
 	}
 	
 	/**
@@ -99,8 +113,16 @@ public class Recommendation {
 	 * Sets the videoID of the recommended video.
 	 * @param videoID of video
 	 */
-	public void setvideoID(String videoID) {
+	public void setVideoID(String videoID) {
 		this.videoID = videoID;
+	}
+	
+	/**
+	 * Sets the videoID of the recommended video.
+	 * @param videoID of video
+	 */
+	public void setActivity(String activity) {
+		this.activity = activity;
 	}
 	
 	/**
