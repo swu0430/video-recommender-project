@@ -141,19 +141,6 @@ public class ChildframeFavorites extends JFrame {
         	panelVideos.add(Box.createRigidArea(new Dimension(0,20)));
         	
     	}
-    	
-//    	/**
-//    	 * Create mouse listeners 
-//    	 * Used to interact with the hyper links (JLabels) 
-//    	 */
-//    	
-//    	MouseListener mouseListener = new MouseAdapter() {
-//    		@Override
-//    		public void mouseClicked(MouseEvent e) {
-//    			JLabel url = (JLabel) e.getSource();
-//    		}
-//    		
-//    	};
    
     	// Create a JPanel for the closing "OK" button.
     	JPanel panelClosingButtons = new JPanel();
