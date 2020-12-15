@@ -12,7 +12,3 @@ Helpful Resources & Tutorials:
 
 Java Swing UI:
 - https://www.javatpoint.com/java-swing
-- https://github.com/Chrriis/DJ-Native-Swing
-- http://djproject.sourceforge.net/ns
-- https://stackoverflow.com/questions/20440484/embed-a-youtube-video-to-jframe
-- https://www.youtube.com/watch?v=5o3fMLPY7qY
