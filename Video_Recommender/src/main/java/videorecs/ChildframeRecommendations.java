@@ -125,7 +125,7 @@ public class ChildframeRecommendations extends JFrame {
 	public ChildframeRecommendations() {
 		
 		// Call constructor in JFrame super class.
-		// Define the title, close operation, and layout of window.
+		// Define the title, close operation, and layout (boxlayout) of window.
 		super("Your Video Recommendations");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
@@ -335,7 +335,7 @@ public class ChildframeRecommendations extends JFrame {
 		
     	/*
     	 * Clicking this button brings you back to the first window 
-    	 * This also clears the information from the JFrame and JPanels 
+    	 * This also clears the information from the JFrame, JPanels, and JRadioButtons
     	 */
 	   	JButton backButton = new JButton("Go Back");
 	   	backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -343,12 +343,23 @@ public class ChildframeRecommendations extends JFrame {
 	   	backButton.addActionListener(new ActionListener() {
     		@Override
            	public void actionPerformed(ActionEvent e) {
+    			
+    			// Close the current childframe window and bring the mainframe back to front view
     			dispose();
     			Control.MFRAME.setVisible(true);
+    			
+    			// Clear the activity arraylist
     			Mainframe.ACTIVITY_ARRAY_LIST.clear();
+    			
+    			// Clear the information from the JPanels
     			ChildframeRecommendations.PANEL_VIDEO1.removeAll();
     			ChildframeRecommendations.PANEL_VIDEO2.removeAll();
     			ChildframeRecommendations.PANEL_VIDEO3.removeAll();
+    			
+    			// Clear the JRadio buttons
+    			likeDislikeButtonGroup1.clearSelection();
+    			likeDislikeButtonGroup2.clearSelection();
+    			likeDislikeButtonGroup3.clearSelection();
     		}
     	});
     	
@@ -414,7 +425,7 @@ public class ChildframeRecommendations extends JFrame {
     	panelClosingButtons.add(backButton);
     	panelClosingButtons.add(submitButton);
 		
-    	// Add all the panels to the JFrame and set the JFrame to visible.
+    	// Add all the panels to the JFrame, size the JFrame, and set the JFrame to visible.
 		this.add(Box.createRigidArea(new Dimension(0,10)));
 		this.add(panelIntro);
 		

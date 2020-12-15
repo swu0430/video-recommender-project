@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
 /**
  * This class represents a childframe Java Swing GUI that displays the user's list of favorited
@@ -46,13 +47,21 @@ public class ChildframeFavorites extends JFrame {
 	public ChildframeFavorites() {
 		
 		// Call constructor in JFrame super class. 
-		// Define the title, close operation, and layout of window.
+		// Define the title, close operation, and layout (boxlayout) of window.
 		super("Your Favorites");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.getContentPane().setLayout(new BoxLayout(this.getContentPane(), BoxLayout.Y_AXIS));
 		
 		// Set the mainframe to invisible.
 		Control.MFRAME.setVisible(false);
+		
+		// Create an overarching JPanel and set to boxlayout format
+		JPanel panel = new JPanel();
+		BoxLayout boxlayout = new BoxLayout(panel, BoxLayout.Y_AXIS);
+		panel.setLayout(boxlayout);
+		
+		// Create a JScrollPane object to add a scrollbar
+		JScrollPane scrollPane = new JScrollPane(panel);
 		
 		// Create JPanel for the introduction message
     	JPanel panelIntro = new JPanel();
@@ -77,8 +86,8 @@ public class ChildframeFavorites extends JFrame {
     	// Create a sub-JPanel within the panelVideos JPanel for each of the activities.
     	for (int j = 0; j < ChildframeFavorites.FAVORITE_ACTIVITIES.size(); j++ ) {
     		JPanel panelVideosSection = new JPanel();
-    		BoxLayout boxlayout = new BoxLayout(panelVideosSection, BoxLayout.Y_AXIS);
-    		panelVideosSection.setLayout(boxlayout);
+    		BoxLayout boxlayoutSection = new BoxLayout(panelVideosSection, BoxLayout.Y_AXIS);
+    		panelVideosSection.setLayout(boxlayoutSection);
     		panelVideosSection.setBorder(BorderFactory.createTitledBorder(ChildframeFavorites.FAVORITE_ACTIVITIES.get(j).toUpperCase()));
     	
         	// Within each activity sub-JPanel, display all the videos associated with that activity that 
@@ -161,15 +170,20 @@ public class ChildframeFavorites extends JFrame {
 
     	// Add the JButton to the closing JPanel.
     	panelClosingButtons.add(okButton);
-		
-    	// Add all the panels to the JFrame and set the JFrame to visible.
-    	this.add(Box.createRigidArea(new Dimension(0,10)));
-    	this.add(panelIntro, Component.CENTER_ALIGNMENT);
-    	this.add(Box.createRigidArea(new Dimension(0,30)));
-    	this.add(panelVideos);
-    	this.add(Box.createRigidArea(new Dimension(0,30)));
-    	this.add(panelClosingButtons);
-    	this.add(Box.createRigidArea(new Dimension(0,20)));
+    	
+    	// Add all the panels to the overarching JPanel
+    	panel.add(Box.createRigidArea(new Dimension(0,10)));
+    	panel.add(panelIntro, Component.CENTER_ALIGNMENT);
+    	panel.add(Box.createRigidArea(new Dimension(0,30)));
+    	panel.add(panelVideos);
+    	panel.add(Box.createRigidArea(new Dimension(0,30)));
+    	panel.add(panelClosingButtons);
+    	panel.add(Box.createRigidArea(new Dimension(0,20)));
+    	
+    	// Add the scrollPane to the JFrame
+    	this.getContentPane().add(scrollPane);
+    	
+    	// Size the JFrame and set the JFrame to visible.
     	this.pack();
     	this.setVisible(true);
 		
