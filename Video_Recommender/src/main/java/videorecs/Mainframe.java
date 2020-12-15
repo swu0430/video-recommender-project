@@ -223,7 +223,7 @@ public class Mainframe extends JFrame {
     	panelClosingButtons.add(favoritesButton);
     	panelClosingButtons.add(exitButton);
     
-    	// Add all the panels to the mainframe's JFrame and set the JFrame to visible.
+    	// Add all the panels to the mainframe's JFrame, size the JFrame, and set the JFrame to visible.
     	this.add(Box.createRigidArea(new Dimension(0,10)));
     	this.add(panelIntro);
     	this.add(Box.createRigidArea(new Dimension(0,30)));
