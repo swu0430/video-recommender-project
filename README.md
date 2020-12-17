@@ -22,7 +22,7 @@ This Java Maven program takes in user input for activities they like to do or th
 
 * ApiDevKey.java – Contains a set of API Developer Keys for calling the YouTube API’s (this class is placed in .gitignore).
 
-## Helpful Resources & Tutorials: 
+## Helpful Resources while Creating This Project: 
 * YouTube Data API v3 Tutorial - https://www.youtube.com/watch?v=TE66McLMMEw&t=306s
 * Search List API (set 'Developer' to True) - https://developers.google.com/youtube/v3/docs/search/list?apix=true&apix_params=%7B%22part%22%3A%5B%22snippet%22%5D%2C%22q%22%3A%22the%20weeknd%22%7D
 * Video list API - https://developers.google.com/youtube/v3/docs/videos/list
