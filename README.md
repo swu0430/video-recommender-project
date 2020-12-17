@@ -1,4 +1,9 @@
-# video-recommender-project
+# Educational Video Recommender
+
+This Java Maven program takes in user input for activities they like to do or that they have coming up, as well as possibly preferences for video characteristics (e.g., video duration). The program will then call the YouTube Data API to search for educational videos based on these inputs and parse the API JSON outputs to filter for videos based on the user’s preferences and default criteria, such as a minimum number of views, a minimum rating (# likes / [# likes + # dislikes]), etc. The final output of the program be a list of three recommended YouTube URL links. The entire program also runs in the Java Swing GUI as opposed to the Eclipse console (including GUI windows to accept user input, display the recommended videos, and allow the user to view liked or favorited videos).
+
+
+
 
 Helpful Resources & Tutorials: 
 - YouTube Data API v3 Tutorial - https://www.youtube.com/watch?v=TE66McLMMEw&t=306s
